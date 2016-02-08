@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title>TreeGrid examples</title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<link href="../dist/css/jquery.treegrid.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+
+
+
+
+
+<h1>TreeGrid examples</h1>
+
+<p><a href="index.html">API documentation</a></p>
+
+<h2>Basic</h2>
+
+<table class="table table-bordered tree-basic">
+	<tbody>
+		<tr class="treegrid-1 expanded"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-2 treegrid-parent-1"><td>Node 1-1</td><td>Additional info</td></tr>
+		<tr class="treegrid-3 treegrid-parent-1"><td>Node 1-2</td><td>Additional info</td></tr>
+		<tr class="treegrid-4 treegrid-parent-3"><td>Node 1-2-1</td><td>Additional info</td></tr>
+		<tr class="treegrid-5 treegrid-parent-3"><td>Node 1-2-2</td><td>Additional info</td></tr>
+		<tr class="treegrid-6"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-7 treegrid-parent-6"><td>Node 2-1</td><td>Additional info</td></tr>
+	</tbody>
+</table>
+
+<p>Make tree structure with <code>.treegrid-</code> and <code>.treegrid-parent-</code> classes for <code>&lt;tr&gt;</code> tag. Add class <code>expanded</code> to node if you want to show it expanded.</p>
+<pre>
+&lt;table class="tree"&gt;
+  &lt;tbody&gt;
+    &lt;tr class="treegrid-1 expanded"&gt;&lt;td&gt;Root node&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-2 treegrid-parent-1"&gt;&lt;td&gt;Node 1-1&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-3 treegrid-parent-1"&gt;&lt;td&gt;Node 1-2&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-4 treegrid-parent-3"&gt;&lt;td&gt;Node 1-2-1&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-5 treegrid-parent-3"&gt;&lt;td&gt;Node 1-2-2&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-6"&gt;&lt;td&gt;Root node&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr class="treegrid-7 treegrid-parent-6"&gt;&lt;td&gt;Node 2-1&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</pre>
+
+<p>To initialize TreeGrid, use JavaScript:</p>
+<pre>
+$('.tree').treegrid();
+</pre>
+
+
+
+
+
+<h2>Data loading</h2>
+
+<table class="table table-bordered tree-load">
+	<tbody>
+		<tr class="treegrid-1" data-count="2"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-2" data-count="1"><td>Root node</td><td>Additional info</td></tr>
+	</tbody>
+</table>
+
+<p>Add to table structure <code>data-count</code> attribute to make node loadable. In this attribute stores child node count. But in fact, it does not matter how many childs actually node have. Setting this attribute indicates that the necessary data loading.</p>
+<pre>
+&lt;tr class="treegrid-1" <b>data-count="2"</b>&gt;&lt;td&gt;Root node&lt;/td&gt;&lt;td&gt;Additional info&lt;/td&gt;&lt;/tr&gt;
+</pre>
+
+<p>Data loading starts automaticaly when node expands. To add nodes use <code>source</code> option. You can use this option as function. If function returns false, node is not expands. Function should return array of strings, that contains html of adding rows.</p>
+<pre>
+$('.tree').treegrid({
+  source: function(id) {
+    if (id == 1) return ['&lt;tr&gt;&lt;td&gt;Loaded node 1&lt;/td&gt;&lt;/tr&gt;'];
+    else return false;
+  }
+});
+</pre>
+<p>Also you can use <code>source</code> as url. Server returns data in <code>json</code> format.</p>
+<pre>
+$('.tree').treegrid({
+  source: '/data.php'
+});
+</pre>
+
+
+
+
+
+<h2>Adding and removing nodes</h2>
+
+<div style="margin-bottom: 20px;"><a href="#" class="tree-add-root btn btn-primary">Add root</a></div>
+
+<table class="table table-bordered tree-add">
+	<tbody>
+		<tr class="treegrid-1"><td>Root node</td><td><a href="#" class="tree-add-node">Add child</a></td></tr>
+		<tr class="treegrid-2 expanded"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-3 treegrid-parent-2"><td>Node 2-1</td><td>Additional info</td></tr>
+	</tbody>
+</table>
+
+<p>Use <code>add</code> function to add nodes. Nodes will added to element, that execute this function. If you want to add root nodes, call this function from table.</p>
+<pre>
+$('.tree').treegrid('add', ['&lt;tr&gt;&lt;td&gt;Added root&lt;/td&gt;&lt;/tr&gt;']);
+$('.treegrid-1').treegrid('add', ['&lt;tr&gt;&lt;td&gt;Added node&lt;/td&gt;&lt;/tr&gt;']);
+</pre>
+
+<table class="table table-bordered tree-remove">
+	<tbody>
+		<tr class="treegrid-1 expanded"><td>Root node</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-2 treegrid-parent-1"><td>Node 1-1</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-3 treegrid-parent-1"><td>Node 1-2</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-4 treegrid-parent-3"><td>Node 1-2-1</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-5 treegrid-parent-3"><td>Node 1-2-2</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-6"><td>Root node</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+		<tr class="treegrid-7 treegrid-parent-6"><td>Node 2-1</td><td><a href="#" class="tree-remove-node">Remove me</a></td></tr>
+	</tbody>
+</table>
+
+<p>Use <code>remove</code> function to remove nodes. When node removes, its children remves too.</p>
+<pre>
+$('.treegrid-1').treegrid('remove');
+</pre>
+
+
+
+
+
+<h2>Moving nodes</h2>
+
+<div style="margin-bottom: 20px;"><a href="#" class="tree-move-node btn btn-primary">Move node</a></div>
+
+<table class="table table-bordered tree-move">
+	<tbody>
+		<tr class="treegrid-1 expanded"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-2 treegrid-parent-1"><td>Node 1-1</td><td>Additional info</td></tr>
+		<tr class="treegrid-3 treegrid-parent-1"><td>Node 1-2</td><td>Additional info</td></tr>
+		<tr class="treegrid-4 treegrid-parent-3"><td>Node 1-2-1</td><td>Additional info</td></tr>
+		<tr class="treegrid-5 treegrid-parent-3"><td>Node 1-2-2</td><td>Additional info</td></tr>
+		<tr class="treegrid-6 treegrid-parent-1"><td>Node 1-3</td><td>Additional info</td></tr>
+		<tr class="treegrid-7 treegrid-parent-1"><td>Node 1-4</td><td>Additional info</td></tr>
+		<tr class="treegrid-8"><td>Root node</td><td>Additional info</td></tr>
+		<tr class="treegrid-9 treegrid-parent-8"><td>Node 2-1</td><td>Additional info</td></tr>
+	</tbody>
+</table>
+
+<p>To make nodes moveable, set <code>enableMove</code> option in <code>true</code>. To control the node movement use events <code>onMoveStart</code>, <code>onMoveStop</code>, <code>onMoveOver</code>, <code>onMoveOut</code>, <code>onMove</code>. Helper element has <code>.treegrid-container.dragging</code> class. In moving events <code>position</code> param means where node should be move (0-before, 1-inside, 1-after) target.</p>
+<pre>
+$('.tree').treegrid({
+  enableMove: true,
+  onMoveOver: function(item, helper, target, position) {
+    if (target.hasClass('treegrid-8')) return false;
+    return true;
+  }
+});
+</pre>
+<p>If you want to manualy move node, use JavaScript:</p>
+<pre>
+$('.treegrid-8').treegrid('move', $('.treegrid-2'), 2);
+</pre>
+
+
+
+
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="../dist/js/jquery.treegrid.min.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('.tree-basic').treegrid();
+
+				$('.tree-load').treegrid({
+					source: function(id) {
+						if (id == 1) return [
+							'<tr class="treegrid-3"><td>Loaded node 1-1</td></tr>',
+							'<tr class="treegrid-4"><td>Loaded node 1-2</td></tr>'
+						];
+						return ['<tr class="treegrid-5"><td>Loaded node 2-1</td></tr>'];
+					}
+				});
+
+				$('.tree-add').treegrid();
+				$('.tree-add-root').click(function(e) {
+					e.preventDefault();
+					$('.tree-add').treegrid('add', ['<tr><td>Added root</td></tr>']);
+				});
+				$('.tree-add-node').click(function(e) {
+					e.preventDefault();
+					$(this).closest('tr').treegrid('add', ['<tr><td>Added node</td></tr>']);
+				});
+
+				$('.tree-remove').treegrid();
+				$('.tree-remove-node').click(function(e) {
+					e.preventDefault();
+					if (confirm('Remove with its children?')) $(this).closest('tr').treegrid('remove');
+				});
+
+				$('.tree-move').treegrid({
+					enableMove: true,
+					onMoveOver: function(item, helper, target, position) {
+						if (target.hasClass('treegrid-8')) return false;
+						return true;
+					}
+				});
+				$('.tree-move-node').click(function(e) {
+					e.preventDefault();
+					$('.tree-move .treegrid-8').treegrid('move', $('.tree-move .treegrid-2'), 2);
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+		<title>TreeGrid API documentation</title>
+
+		<!-- Bootstrap -->
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+		<link href="../dist/css/jquery.treegrid.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+
+		<h1>TreeGrid API documentation</h1>
+
+		<p><a href="examples.html">Examples</a></p>
+
+		<h2>Options</h2>
+
+		<table class="table table-bordered">
+			<thead>
+				<tr><th>Name</th><th>Type</th><th>Description</th></tr>
+			</thead>
+			<tbody>
+				<tr><td rowspan="2">source</td><td>String</td><td>When a string is used, the TreeGrid plugin expects that string to point to a URL resource that will return JSON data. Data should be array of strings, that contains HTML of adding nodes.</td></tr>
+				<tr><td nowrap>Function(String id)</td><td>Callback, provides the most flexibility and can be used to connect any data source to TreeGrid. The callback gets <code>id</code> argument. This is id of node that data is needed.</td></tr>
+				<tr><td>enableMove</td><td>Boolean</td><td>To enable node moving, set this option to <code>true</code>. Defaults to false.</td></tr>
+				<tr><td>moveDistance</td><td>Integer</td><td>Tolerance, in pixels, for when moving should start. If specified, moving will not start until after mouse is dragged beyond distance. Defaults to 10.</td></tr>
+				<tr><td>moveHandle</td><td>Selector or Element</td><td>Restricts moving start click to the specified element. Defaults to false.</td></tr>
+			</tbody>
+		</table>
+
+		<h2>Methods</h2>
+
+		<table class="table table-bordered">
+			<tbody>
+				<tr><td>toggle()</td><td>Toggles state of the node.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('toggle');</code></td></tr>
+				<tr><td>expand()</td><td>Expand node.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('expand');</code></td></tr>
+				<tr><td>collapse()</td><td>Collapse node.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('collapse');</code></td></tr>
+				<tr><td>add(Array items)</td><td>Add nodes to parent or as root. If executes from table, nodes adds as roots. If executes from row, nodes adds as children. Every item of array should be HTML of adding nodes.<br><strong>Example:</strong> <code>$('.tree').treegrid('add', ['&lt;tr&gt;&lt;td&gt;New root&lt;/td&gt;&lt;/tr&gt;']);</code></td></tr>
+				<tr><td>remove()</td><td>Removs node with all descendants.<br><strong>Example:</strong> <code>$('.treegrid-1, .treegrid-2').treegrid('remove');</code></td></tr>
+				<tr><td>move(Element target, Integer position)</td><td>Moves node to <code>target</code>. To specify where node should be move set <code>position</code> param (0-before, 1-inside, 1-after).<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('move', $('.treegrid-2'), 1);</code></td></tr>
+				<tr><td>getRoots()</td><td>Get all roots of TreeGrid. Returns jQuery contains roots.<br><strong>Example:</strong> <code>$roots = $('.tree').treegrid('getRoots');</code></td></tr>
+				<tr><td>getChildNodes()</td><td>Get direct children of node. Returns jQuery contains children.<br><strong>Example:</strong> <code>$items = $('.treegrid-1').treegrid('getChildNodes');</code></td></tr>
+				<tr><td>getBranch()</td><td>Get all descendants of node. Result contains node that executes method. Returns jQuery contains node with descendants.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('getBranch').css('color', 'red');</code></td></tr>
+				<tr><td>getParent()</td><td>Get parent of the node.<br><strong>Example:</strong> <code>$parent = $('.treegrid-1').treegrid('getParent');</code></td></tr>
+				<tr><td>isCollapsed()</td><td>Get whether node is collapsed.<br><strong>Example:</strong> <code>if ($tr.treegrid('isCollapsed')) { ... }</code></td></tr>
+				<tr><td>isExpanded()</td><td>Get whether node is expended.<br><strong>Example:</strong> <code>b = $tr.treegrid('isExpanded');</code></td></tr>
+			</tbody>
+		</table>
+
+		<h2>Events</h2>
+
+		<table class="table table-bordered">
+			<tbody>
+				<tr><td>onExpand()</td><td>Calling when node expands. Return <code>false</code> if you dont want the node been expanded.</td></tr>
+				<tr><td>onCollapse()</td><td>Calling when node collapses. Return <code>false</code> if you dont want the node been collapsed.</td></tr>
+				<tr><td>onAdd(Array items)</td><td>Calling when nodes was added. Returns jQuery container that contains all added nodes.</td></tr>
+				<tr><td>onMoveStart(Element item, Element helper)</td><td>This event is triggered when node moving starts. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node.</td></tr>
+				<tr><td>onMoveStop(Element item, Element helper)</td><td>This event is triggered when node moving ends. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node.</td></tr>
+				<tr><td>onMoveOver(Element item, Element helper, Element target, Integer position)</td><td>This event is triggered when node moving over another node that support droping. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 1-after). If you dont want target supporting dropping, return <code>false</code>.</td></tr>
+				<tr><td>onMoveOut(Element item, Element helper, Element target)</td><td>This event is triggered when node outs another node that support droping. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node. <code>target</code> is jQuery of target element.</td></tr>
+				<tr><td>onMove(Element item, Element target, Integer position)</td><td>This event is triggered when node drops to another node. <code>item</code> is jQuery of original element. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 1-after). If you want to prevent moving, return <code>false</code>.</td></tr>
+			</tbody>
+		</table>
+
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>
