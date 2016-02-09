@@ -1,2 +1,2 @@
 # jquery-treegrid
-TreeGrid jquery plugin
+TreeGrid plugin for jQuery
