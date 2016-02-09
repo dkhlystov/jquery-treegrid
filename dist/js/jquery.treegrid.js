@@ -1,5 +1,5 @@
 /*
- * TreeGrid plugin v0.1.3
+ * TreeGrid plugin v0.1.4
  * Copyright 2016 Dmitry Khlystov
  * Licensed under the MIT license
  */
@@ -275,14 +275,16 @@
 			//child nodes
 			var $child = _getChildNodes($this);
 			//child count
-			if ($this.data('count') === undefined || $this.data('loaded')) {
-				var count = $child.length;
-				$this.data({
-					loaded: true,
-					count: count
-				});
-				if (count && forceExpand) $this.addClass('expanded');
-			};
+			var count = $child.length;
+			if ($this.data('count') === undefined || $this.data('loaded') || $this.data('count') == count) {
+				if (!$this.data('loadNeeded')) {
+					$this.data({
+						loaded: true,
+						count: count
+					});
+					if (count && forceExpand) $this.addClass('expanded');
+				}
+			} else $this.data('loadNeeded', true);
 			//container
 			$td = $this.find('>td:first'), $container = $td.find('>.treegrid-container');
 			if ($container.length === 0) {
@@ -323,7 +325,7 @@
 		if ($.isFunction(settings.source)) {
 			var items = settings.source.call($this, _getId($this));
 			if ($.isArray(items)) {
-				$this.data('loaded', true);
+				$this.removeDate('loadNeeded').data('loaded', true);
 				_add($this, items);
 				return true;
 			}
@@ -332,7 +334,7 @@
 		if ($.type(settings.source) === 'string' && !$this.hasClass('loading')) {
 			$this.addClass('loading');
 			$.post(settings.source, {id: _getId($this)}, function(items) {
-				$this.data('loaded', true);
+				$this.removeDate('loadNeeded').data('loaded', true);
 				_add($this, items);
 				$this.removeClass('loading');
 			}, 'json');
