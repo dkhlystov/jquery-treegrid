@@ -210,18 +210,21 @@
 		//cell count
 		var $table = $this, cellCount;
 		if ($table.prop('tagName') !== 'TABLE') $table = $table.closest('table');
-		cellCount = $table.find('tr:first>th,tr:first>td').length;
+		cellCount = $table.find('>thead>tr,>tbody>tr').first().find('>th,>td').length;
 		//adding
 		$.each(items, function(i, item) {
-			var $tr = $(item), cnt = $tr.find('>td').length;
+			var $tr = $(item);
+			//if already exists
+			if ($table.find('>tbody>tr.treegrid-' + _getId($tr)).length) return;
 			//parent id
 			if (parentId !== null) $tr.addClass('treegrid-parent-' + parentId);
 			//cell count
+			var cnt = $tr.find('>td').length;
 			if (cnt < cellCount) for (var i = $tr.find('>td').length; i < cellCount; i++) $tr.append('<td>');
 			else if (cnt > cellCount) $tr.find('>td').eq(cellCount - 1).nextAll().remove();
 			//add to dom
 			if ($target.length) $tr.insertBefore($target);
-			else $table.find('tbody').append($tr);
+			else $table.find('>tbody').append($tr);
 			//add to result
 			childs.push($tr[0]);
 		});
@@ -322,13 +325,15 @@
 		var settings = $this.closest('table').data('treegrid-settings');
 		_getBranch($this).not($this).remove();
 		//function
-		if ($.isFunction(settings.source)) {
-			var items = settings.source.call($this, _getId($this));
-			if ($.isArray(items)) {
-				$this.removeDate('loadNeeded').data('loaded', true);
+		if ($.isFunction(settings.source) && !$this.hasClass('loading')) {
+			$this.addClass('loading');
+			settings.source.call($this, _getId($this), function(items) {
+				console.log('complete: '+items.length);
+				$this.removeData('loadNeeded').data('loaded', true);
 				_add($this, items);
-				return true;
-			}
+				$this.removeClass('loading');
+				methods.expand.call($this);
+			});
 		};
 		//url
 		if ($.type(settings.source) === 'string' && !$this.hasClass('loading')) {
@@ -518,7 +523,7 @@
 	};
 
 	$.fn.treegrid.defaults = {
-		source: null, //Function()|Url Result should be in add() function format. For Url 'json' format is used.
+		source: null, //Function(id, complete)|Url Result should be in add() function format. For Url 'json' format is used.
 		enableMove: false, //Boolean To let user move nodes set it in true.
 		moveDistance: 10, //Integer Tolerance, in pixels, for when moving should start. If specified, moving will not start until after mouse is dragged beyond distance.
 		moveHandle: false, //Selector|Element Restricts moving start click to the specified element.
