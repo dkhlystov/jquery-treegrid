@@ -13,8 +13,8 @@
 	display: block;
 	height: 0;
 	left: 50%;
-	margin-top: -6px;
 	margin-left: -6px;
+	margin-top: -6px;
 	position: absolute;
 	top: 50%;
 	width: 0;
@@ -28,6 +28,14 @@
 }
 .treegrid-expander-collapsed::after {
 	border-left-color: #ccc;
+}
+tr.loading>td>.treegrid-container>.treegrid-expander::after {
+	background: url('../images/loader.gif') center center no-repeat;
+	border: 0;
+	height: 16px;
+	margin-left: -8px;
+	margin-top: -8px;
+	width: 16px;
 }
 .treegrid-move-indicator {
 	border: 5px solid transparent;
