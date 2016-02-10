@@ -84,9 +84,8 @@ $('.tree').treegrid();
 <p>Data loading starts automaticaly when node expands. To add nodes use <code>source</code> option. You can use this option as function. If function returns false, node is not expands. Function should return array of strings, that contains html of adding rows.</p>
 <pre>
 $('.tree').treegrid({
-  source: function(id) {
-    if (id == 1) return ['&lt;tr&gt;&lt;td&gt;Loaded node 1&lt;/td&gt;&lt;/tr&gt;'];
-    else return false;
+  source: function(id, response) {
+    if (id == 1) response(['&lt;tr&gt;&lt;td&gt;Loaded node 1&lt;/td&gt;&lt;/tr&gt;']);
   }
 });
 </pre>
@@ -187,12 +186,12 @@ $('.treegrid-8').treegrid('move', $('.treegrid-2'), 2);
 				$('.tree-basic').treegrid();
 
 				$('.tree-load').treegrid({
-					source: function(id) {
-						if (id == 1) return [
+					source: function(id, response) {
+						if (id == 1) response([
 							'<tr class="treegrid-3"><td>Loaded node 1-1</td></tr>',
 							'<tr class="treegrid-4"><td>Loaded node 1-2</td></tr>'
-						];
-						return ['<tr class="treegrid-5"><td>Loaded node 2-1</td></tr>'];
+						]);
+						else response(['<tr class="treegrid-5"><td>Loaded node 2-1</td></tr>']);
 					}
 				});
 

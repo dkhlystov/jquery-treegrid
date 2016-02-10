@@ -33,7 +33,7 @@
 			</thead>
 			<tbody>
 				<tr><td rowspan="2">source</td><td>String</td><td>When a string is used, the TreeGrid plugin expects that string to point to a URL resource that will return JSON data. Data should be array of strings, that contains HTML of adding nodes.</td></tr>
-				<tr><td nowrap>Function(String id)</td><td>Callback, provides the most flexibility and can be used to connect any data source to TreeGrid. The callback gets <code>id</code> argument. This is id of node that data is needed.</td></tr>
+				<tr><td>Function(String id, Function response(Array items))</td><td>Callback, provides the most flexibility and can be used to connect any data source to TreeGrid. The callback gets <code>id</code> argument. This is id of node that data is needed. A <code>response</code> callback, which expects a single argument: the items to add to the node. It's important when providing a custom source callback to handle errors during the request. If you don't call <code>response</code> then loading state of then node will be stay.</td></tr>
 				<tr><td>enableMove</td><td>Boolean</td><td>To enable node moving, set this option to <code>true</code>. Defaults to false.</td></tr>
 				<tr><td>moveDistance</td><td>Integer</td><td>Tolerance, in pixels, for when moving should start. If specified, moving will not start until after mouse is dragged beyond distance. Defaults to 10.</td></tr>
 				<tr><td>moveHandle</td><td>Selector or Element</td><td>Restricts moving start click to the specified element. Defaults to false.</td></tr>
