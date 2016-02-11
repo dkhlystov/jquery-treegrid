@@ -1,5 +1,5 @@
 /*
- * TreeGrid plugin v0.1.4
+ * TreeGrid plugin v0.1.5
  * Copyright 2016 Dmitry Khlystov
  * Licensed under the MIT license
  */
@@ -328,7 +328,6 @@
 		if ($.isFunction(settings.source) && !$this.hasClass('loading')) {
 			$this.addClass('loading');
 			settings.source.call($this, _getId($this), function(items) {
-				console.log('complete: '+items.length);
 				$this.removeData('loadNeeded').data('loaded', true);
 				_add($this, items);
 				$this.removeClass('loading');
