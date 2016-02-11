@@ -35,6 +35,24 @@
 	// ================
 
 	var methods = {
+		option: function(optionName, value) {
+			var settings = this.data('treegrid-settings');
+
+			if ($.type(optionName) === 'string' && value !== undefined) {
+				optionName = {optionName: value};
+			}
+
+			if ($.isPlainObject(optionName)) {
+				settings = $.extend({}, settings, optionName);
+				return this.data('treegrid-settings', settings);
+			}
+
+			if ($.type(optionName) === 'string') {
+				return settings[optionName];
+			}
+
+			return settings;
+		},
 		getId: function() {
 			return _getId(this);
 		},
@@ -386,13 +404,13 @@
 		//left mouse button
 		if (e.button !== 0) return;
 		//move enabled?
-		var $this = $(this), o = $this.closest('table').data('treegrid-settings');
-		if (!o.enableMove) return;
+		var $this = $(this), settings = $this.closest('table').data('treegrid-settings');
+		if (!settings.enableMove) return;
 		//node expander?
 		var $el = $(e.target);
 		if ($el.hasClass('treegrid-expander')) return;
 		//handle
-		if ((o.moveHandle !== false) && ($this.find(o.moveHandle)[0] != $el[0])) return;
+		if ((settings.moveHandle !== false) && ($this.find(settings.moveHandle)[0] != $el[0])) return;
 
 		//move
 		$moveItem = $this.closest('tr');
