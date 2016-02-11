@@ -35,6 +35,9 @@
 	// ================
 
 	var methods = {
+		getId: function() {
+			return _getId(this);
+		},
 		toggle: function() {
 			return this.each(function() {
 				$this = $(this);
