@@ -118,7 +118,7 @@
 				var $this = $(this),
 					$parent = _getParent($this);
 				_getBranch($this).remove();
-				_initNode($parent, $parent.data('depth'));
+				_initNode($parent, $parent.data('treegrid-depth'));
 			});
 
 			//remake drop map if dragging
@@ -147,9 +147,9 @@
 			if (_parentCollapsed(this)) $branch.hide();
 
 			//reinit
-			if ($oldParent.length) _initNode($oldParent, $oldParent.data('depth'));
+			if ($oldParent.length) _initNode($oldParent, $oldParent.data('treegrid-depth'));
 			var $parent = _getParent(this);
-			if ($parent.length) _initNode($parent, $parent.data('depth'));
+			if ($parent.length) _initNode($parent, $parent.data('treegrid-depth'));
 			else _initNode(this);
 		},
 		getRoots: function() {
@@ -278,7 +278,7 @@
 		childs = $(childs);
 		//init node with childs
 		if (parentId === null) _initNode(childs);
-		_initNode($this, $this.data('depth'));
+		_initNode($this, $this.data('treegrid-depth'));
 		//callbask
 		var settings = $this.closest('table').data('treegrid-settings');
 		settings.onAdd.call($this, childs);
@@ -320,7 +320,7 @@
 	function _initNode($this, depth, forceExpand) {
 		if (depth === undefined) depth = 1;
 		$this.each(function() {
-			var $this = $(this).data('depth', depth);
+			var $this = $(this).data('treegrid-depth', depth);
 			//child nodes
 			var $child = _getChildNodes($this);
 			//child count
