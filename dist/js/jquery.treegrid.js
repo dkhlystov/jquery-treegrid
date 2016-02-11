@@ -477,8 +477,8 @@
 			p = 1;
 		};
 		if (v[4] == $moveTarget && p == position) return true;
-		//can't move into null id
-		if (p == 1 && _getId(v[4]) === null) return false;
+		//can't move over node with null id
+		if (_getId(v[4]) === null) return false;
 		//auto expand
 		var $el = v[4];
 		if (p == 1) {
