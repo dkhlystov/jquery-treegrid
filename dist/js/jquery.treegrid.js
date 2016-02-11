@@ -56,6 +56,9 @@
 		getId: function() {
 			return _getId(this);
 		},
+		getDepth: function() {
+			return this.data('treegrid-depth');
+		},
 		toggle: function() {
 			return this.each(function() {
 				$this = $(this);
