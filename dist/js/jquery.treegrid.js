@@ -6,6 +6,31 @@
 
 (function($) {
 
+	$.fn.treegrid = function(method) {
+		if (methods[method]) {
+			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+		} else if (typeof method === 'object' || !method) {
+			return _initTree.apply(this, arguments);
+		} else {
+			$.error('Method with name ' + method + ' does not exists for jQuery.treegrid');
+		}
+	};
+
+	$.fn.treegrid.defaults = {
+		source: null, //Function(id, complete)|Url Result should be in add() function format. For Url 'json' format is used.
+		enableMove: false, //Boolean To let user move nodes set it in true.
+		moveDistance: 10, //Integer Tolerance, in pixels, for when moving should start. If specified, moving will not start until after mouse is dragged beyond distance.
+		moveHandle: false, //Selector|Element Restricts moving start click to the specified element.
+		onExpand: function() { return true; }, //Function() Calling when node expands. Return false if you dont want the node been expanded.
+		onCollapse: function() { return true; }, //Function() Calling when node collapses. Return false if you dont want the node been collapsed.
+		onAdd: function() {}, //Function(items) Calling when nodes was added. Returns jQuery container that contains all added nodes.
+		onMoveStart: function() {}, //Function(item, helper) This event is triggered when node moving starts.
+		onMoveStop: function() {}, //Function(item, helper) This event is triggered when node moving ends.
+		onMoveOver: function() { return true; }, //Function(item, helper, target, position) This event is triggered when node moving over another node that support droping. If you dont want target supporting dropping, return false.
+		onMoveOut: function() {}, //Function(item, helper, target) This event is triggered when node outs another node that support droping.
+		onMove: function() { return true; } //Function(item, target, position) This event is triggered when node drops to another node. If you want to prevent moving, return false.
+	};
+
 	// PUBLIC FUNCTIONS
 	// ================
 
@@ -509,31 +534,6 @@
 				dropMap.push([o.left, o.top, $this.width(), $this.height(), $this]);
 			}
 		});
-	};
-
-	$.fn.treegrid = function(method) {
-		if (methods[method]) {
-			return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-		} else if (typeof method === 'object' || !method) {
-			return _initTree.apply(this, arguments);
-		} else {
-			$.error('Method with name ' + method + ' does not exists for jQuery.treegrid');
-		}
-	};
-
-	$.fn.treegrid.defaults = {
-		source: null, //Function(id, complete)|Url Result should be in add() function format. For Url 'json' format is used.
-		enableMove: false, //Boolean To let user move nodes set it in true.
-		moveDistance: 10, //Integer Tolerance, in pixels, for when moving should start. If specified, moving will not start until after mouse is dragged beyond distance.
-		moveHandle: false, //Selector|Element Restricts moving start click to the specified element.
-		onExpand: function() { return true; }, //Function() Calling when node expands. Return false if you dont want the node been expanded.
-		onCollapse: function() { return true; }, //Function() Calling when node collapses. Return false if you dont want the node been collapsed.
-		onAdd: function() {}, //Function(items) Calling when nodes was added. Returns jQuery container that contains all added nodes.
-		onMoveStart: function() {}, //Function(item, helper) This event is triggered when node moving starts.
-		onMoveStop: function() {}, //Function(item, helper) This event is triggered when node moving ends.
-		onMoveOver: function() { return true; }, //Function(item, helper, target, position) This event is triggered when node moving over another node that support droping. If you dont want target supporting dropping, return false.
-		onMoveOut: function() {}, //Function(item, helper, target) This event is triggered when node outs another node that support droping.
-		onMove: function() { return true; } //Function(item, target, position) This event is triggered when node drops to another node. If you want to prevent moving, return false.
 	};
 
 })(jQuery);
