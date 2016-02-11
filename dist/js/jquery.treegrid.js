@@ -481,11 +481,16 @@
 		if (p == 1 && _getId(v[4]) === null) return false;
 		//auto expand
 		var $el = v[4];
-		if (_isCollapsed($el) && expandTimer === false) expandTimer = window.setTimeout(function() {
-			//methods.expand because loaded check needed
-			methods.expand.call($el);
+		if (p == 1) {
+			if (expandTimer === false && _isCollapsed($el)) expandTimer = window.setTimeout(function() {
+				//methods.expand because loaded check needed
+				methods.expand.call($el);
+				expandTimer = false;
+			}, 500);
+		} else if (expandTimer !== false) {
+			window.clearTimeout(expandTimer);
 			expandTimer = false;
-		}, 500);
+		}
 		//event callback
 		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
 		if (!settings.onMoveOver.call($treegrid, $moveItem, $moveHelper, v[4], p)) return false;
