@@ -400,8 +400,8 @@
 	// ================
 
 	//move vars
-	var $moveItem = null, $moveHelper = null, $moveTarget = null, $indicator,
-		downX, downY, offX, offY, isDragging = false, dropMap, position, expandTimer = false;
+	var $moveItem = null, $moveHelper = null, $moveOver = null, $indicator,
+		downX, downY, offX, offY, isDragging = false, isTarget = false, dropMap, position, expandTimer = false;
 	//move events
 	function _nodeMouseDown(e) {
 		//left mouse button
@@ -453,59 +453,46 @@
 		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
 		settings.onMoveStart.call($treegrid, $moveItem, $moveHelper);
 	};
+	function _dragStop() {
+		isDragging = false;
+		//auto expand
+		if (expandTimer !== false) {
+			window.clearTimeout(expandTimer);
+			expandTimer = false;
+		};
+		//remove helper
+		$moveHelper.remove();
+		//remove indicator
+		$indicator.remove();
+		//event callback
+		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
+		settings.onMoveStop.call($treegrid, $moveItem);
+		//drop
+		if (isTarget) _dragDrop();
+	};
 	function _dragMove(e) {
 		//move helper
 		$moveHelper.css({
 			'left': e.pageX + offX,
 			'top': e.pageY + offY
 		});
-		//check drop map
-		var $el = null;
-		$.each(dropMap, function(i, v) {
-			if ((e.pageX >= v[0]) && (e.pageY >= v[1]) && (e.pageX <= v[0] + v[2]) && (e.pageY <= v[1] + v[3])) {
-				if (_dragOver(e, v)) $el = v[4];
-				return false;
-			}
-		});
-		if ($moveTarget !== null && $el !== $moveTarget) _dragOut($el == null);
-		$moveTarget = $el;
+		//get node over
+		var info = _getNodeAt(e.pageX, e.pageY);
+		//if node over not changed, do nothing
+		if ($moveOver === info.node && position === info.position) return;
+		//if node over before not null, do out
+		if ($moveOver !== null) _dragOut();
+		//set current node over and position
+		$moveOver = info.node;
+		position = info.position;
+		//if node over not null, do over
+		if ($moveOver !== null) _dragOver(info);
+		// console.log(info);
 	};
-	function _dragStop() {
-		isDragging = false;
-		//event callback
-		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
-		settings.onMoveStop.call($treegrid, $moveItem, $moveHelper);
-		//remove helper
-		$moveHelper.remove();
-		//remove indicator
-		$indicator.remove();
+	function _dragOver(info) {
 		//auto expand
-		if (expandTimer !== false) {
-			window.clearTimeout(expandTimer);
-			expandTimer = false;
-		};
-		//drop
-		if ($moveTarget !== null) _dragDrop();
-	};
-	function _dragOver(e, v) {
-		//psition
-		var h1 = v[3] / 4, h2 = h1 * 3, y = e.pageY - v[1], t, p;
-		if (y < h1) {
-			t = v[1];
-			p = 0;
-		} else if (y >= h2) {
-			t = v[1] + v[3];
-			p = 2;
-		} else {
-			t = v[1] + v[3] / 2;
-			p = 1;
-		};
-		if (v[4] == $moveTarget && p == position) return true;
-		//can't move over node with null id
-		if (_getId(v[4]) === null) return false;
-		//auto expand
-		var $el = v[4];
-		if (p == 1) {
+		if (info.position == 1) {
+			var $el = info.node;
 			if (expandTimer === false && _isCollapsed($el)) expandTimer = window.setTimeout(function() {
 				//methods.expand because loaded check needed
 				methods.expand.call($el);
@@ -515,38 +502,39 @@
 			window.clearTimeout(expandTimer);
 			expandTimer = false;
 		}
+		//default
+		isTarget = true;
 		//event callback
 		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
-		if (!settings.onMoveOver.call($treegrid, $moveItem, $moveHelper, v[4], p)) return false;
+		 if (settings.onMoveOver.call($treegrid, $moveItem, $moveHelper, info.node, info.position) === false) isTarget = false;
 		//indicator
-		$indicator.css({
+		if (isTarget) $indicator.css({
 			'display': 'block',
-			'left': v[4].find('>td:first>.treegrid-container').offset().left,
-			'top': t
+			'left': info.node.find('>td:first>.treegrid-container').offset().left,
+			'top': info.top
 		});
-
-		position = p;
-		return true;
 	};
-	function _dragOut(hideIndicator) {
-		//event callback
-		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
-		settings.onMoveOut.call($treegrid, $moveItem, $moveHelper, $moveTarget);
-		//indicator
-		if (hideIndicator) $indicator.hide();
+	function _dragOut() {
 		//auto expand
 		if (expandTimer !== false) {
 			window.clearTimeout(expandTimer);
 			expandTimer = false;
 		}
+		//target
+		isTarget = false;
+		//indicator
+		$indicator.hide();
+		//event callback
+		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings');
+		settings.onMoveOut.call($treegrid, $moveItem, $moveHelper, $moveOver);
 	};
 	function _dragDrop() {
 		//do out
-		_dragOut(true);
+		_dragOut();
 		//callback
 		var $treegrid = $moveItem.closest('table'), settings = $treegrid.data('treegrid-settings'),
-			doMove = settings.onMove.call($treegrid, $moveItem, $moveTarget, position);
-		if (doMove !== false) methods.move.call($moveItem, $moveTarget, position);
+			doMove = settings.onMove.call($treegrid, $moveItem, $moveOver, position);
+		if (doMove !== false) methods.move.call($moveItem, $moveOver, position);
 	};
 	//move additional functions
 	function _makeDropMap() {
@@ -557,12 +545,43 @@
 
 		dropMap = [];
 		$moveItem.parent().find('tr').each(function() {
-			var $this = $(this), id;
-			if ($.inArray(_getId($this), branch) === -1) {
+			var $this = $(this), id = _getId($this);
+			if ((id !== null) && ($.inArray(id, branch) === -1)) {
 				var o = $this.offset();
 				dropMap.push([o.left, o.top, $this.width(), $this.height(), $this]);
 			}
 		});
+	};
+	function _getNodeAt(x, y) {
+		var data = null, info = {
+			node: null,
+			position: null,
+			top: null
+		};
+		//node data
+		$.each(dropMap, function(i, v) {
+			if ((x >= v[0]) && (y >= v[1]) && (x <= v[0] + v[2]) && (y <= v[1] + v[3])) {
+				data = v;
+				info.node = v[4];
+				return false;
+			}
+		});
+		//position
+		if (data !== null) {
+			var h1 = data[3] / 4, h2 = h1 * 3, y1 = y - data[1];
+			if (y1 < h1) {
+				info.position = 0;
+				info.top = data[1];
+			} else if (y1 >= h2) {
+				info.position = 2;
+				info.top = data[1] + data[3];
+			} else {
+				info.position = 1;
+				info.top = data[1] + data[3] / 2;
+			};
+		}
+
+		return info;
 	};
 
 })(jQuery);
