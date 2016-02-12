@@ -487,7 +487,6 @@
 		position = info.position;
 		//if node over not null, do over
 		if ($moveOver !== null) _dragOver(info);
-		// console.log(info);
 	};
 	function _dragOver(info) {
 		//auto expand
