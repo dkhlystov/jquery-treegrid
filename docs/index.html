@@ -55,7 +55,7 @@
 				<tr><td>collapse()</td><td>Collapse node.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('collapse');</code></td></tr>
 				<tr><td>add(Array items)</td><td>Add nodes to parent or as root. If executes from table, nodes adds as roots. If executes from row, nodes adds as children. Every item of array should be HTML of adding nodes.<br><strong>Example:</strong> <code>$('.tree').treegrid('add', ['&lt;tr&gt;&lt;td&gt;New root&lt;/td&gt;&lt;/tr&gt;']);</code></td></tr>
 				<tr><td>remove()</td><td>Removs node with all descendants.<br><strong>Example:</strong> <code>$('.treegrid-1, .treegrid-2').treegrid('remove');</code></td></tr>
-				<tr><td>move(Element target, Integer position)</td><td>Moves node to <code>target</code>. To specify where node should be move set <code>position</code> param (0-before, 1-inside, 1-after).<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('move', $('.treegrid-2'), 1);</code></td></tr>
+				<tr><td>move(Element target, Integer position)</td><td>Moves node to <code>target</code>. To specify where node should be move set <code>position</code> param (0-before, 1-inside, 2-after).<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('move', $('.treegrid-2'), 1);</code></td></tr>
 				<tr><td>getRoots()</td><td>Get all roots of TreeGrid. Returns jQuery contains roots.<br><strong>Example:</strong> <code>$roots = $('.tree').treegrid('getRoots');</code></td></tr>
 				<tr><td>getChildNodes()</td><td>Get direct children of node. Returns jQuery contains children.<br><strong>Example:</strong> <code>$items = $('.treegrid-1').treegrid('getChildNodes');</code></td></tr>
 				<tr><td>getBranch()</td><td>Get all descendants of node. Result contains node that executes method. Returns jQuery contains node with descendants.<br><strong>Example:</strong> <code>$('.treegrid-1').treegrid('getBranch').css('color', 'red');</code></td></tr>
@@ -69,14 +69,14 @@
 
 		<table class="table table-bordered">
 			<tbody>
-				<tr><td>onExpand()</td><td>Calling when node expands. Return <code>false</code> if you dont want the node been expanded.</td></tr>
-				<tr><td>onCollapse()</td><td>Calling when node collapses. Return <code>false</code> if you dont want the node been collapsed.</td></tr>
+				<tr><td>onExpand()</td><td>Calling when node expands. Return <code>false</code> if you don't want the node been expanded.</td></tr>
+				<tr><td>onCollapse()</td><td>Calling when node collapses. Return <code>false</code> if you don't want the node been collapsed.</td></tr>
 				<tr><td>onAdd(Array items)</td><td>Calling when nodes was added. Returns jQuery container that contains all added nodes.</td></tr>
 				<tr><td>onMoveStart(Element item, Element helper)</td><td>This event is triggered when node moving starts. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node.</td></tr>
 				<tr><td>onMoveStop(Element item)</td><td>This event is triggered when node moving ends. <code>item</code> is jQuery of original element.</td></tr>
-				<tr><td>onMoveOver(Element item, Element helper, Element target, Integer position)</td><td>This event is triggered when node moving over another node that support droping. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 1-after). If you dont want target supporting dropping, return <code>false</code>.</td></tr>
+				<tr><td>onMoveOver(Element item, Element helper, Element target, Integer position)</td><td>This event is triggered when node moving over another node that support droping. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 2-after). If you don't want target supporting dropping, return <code>false</code>.</td></tr>
 				<tr><td>onMoveOut(Element item, Element helper, Element target)</td><td>This event is triggered when node outs another node that support droping. <code>item</code> is jQuery of original element. <code>helper</code> is jQuery of clone that uses to moving node. <code>target</code> is jQuery of target element.</td></tr>
-				<tr><td>onMove(Element item, Element target, Integer position)</td><td>This event is triggered when node drops to another node. <code>item</code> is jQuery of original element. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 1-after). If you want to prevent moving, return <code>false</code>.</td></tr>
+				<tr><td>onMove(Element item, Element target, Integer position)</td><td>This event is triggered when node drops to another node. <code>item</code> is jQuery of original element. <code>target</code> is jQuery of target element. <code>position</code> specify moving position (0-before, 1-inside, 2-after). If you want to prevent moving, return <code>false</code>.</td></tr>
 			</tbody>
 		</table>
 
