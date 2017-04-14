@@ -130,11 +130,14 @@
 			return this;
 		},
 		move: function(target, position) {
-			var $tr, id, $oldParent = _getParent(this);
+			var $tr, id, $branch, $oldParent = _getParent(this);
+
+			//branch to move
+			$branch = _getBranch(this);
 
 			//node insert after
 			if (position == 0) $tr = target.prev();
-			else $tr = _getBranch(target).last();
+			else $tr = _getBranch(target).not($branch).last();
 
 			//parent id
 			id = position === 1 ? _getId(target) : _getParentId(target);
@@ -142,7 +145,6 @@
 			if (id !== null) this.addClass('treegrid-parent-' + id);
 
 			//moving
-			$branch = _getBranch(this);
 			if ($tr.length) $branch.insertAfter($tr);
 			else $branch.prependTo(this.parent());
 
