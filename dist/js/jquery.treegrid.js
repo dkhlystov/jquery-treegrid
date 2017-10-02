@@ -138,6 +138,7 @@
 			//node insert after
 			if (position == 0) $tr = target.prev();
 			else $tr = _getBranch(target).not($branch).last();
+			if ($branch.index($tr) != -1) return;
 
 			//parent id
 			id = position === 1 ? _getId(target) : _getParentId(target);
